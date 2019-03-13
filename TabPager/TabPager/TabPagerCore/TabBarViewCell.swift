@@ -44,7 +44,7 @@ public class TabBarViewCell: UICollectionViewCell {
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label.topAnchor.constraint(equalTo: contentView.topAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
             ])
     }
     
