@@ -28,7 +28,7 @@ class TabPagerFlowLayout: UICollectionViewFlowLayout {
                                          y: calculatedFrame.minY,
                                          width: calculatedFrame.size.width + remainingWidthDistribution,
                                          height: calculatedFrame.size.height)
-                frameX += attr.frame.maxX
+                frameX += attr.frame.size.width
             }
             return attributes
         } else {
