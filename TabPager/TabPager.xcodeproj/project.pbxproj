@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CA0AF887222EB49A0032AE25 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0AF886222EB49A0032AE25 /* TabBar.swift */; };
 		CA0E9026223250030048EC53 /* UIView+Anchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0E9025223250030048EC53 /* UIView+Anchors.swift */; };
-		CA0E9029223262C70048EC53 /* AutoSizingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0E9028223262C70048EC53 /* AutoSizingCollectionView.swift */; };
+		CA48B173223A351200BDE0C4 /* TestingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA48B172223A351200BDE0C4 /* TestingTableViewCell.swift */; };
 		CA4C33752236EB79006CB055 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4C33742236EB79006CB055 /* ExampleViewController.swift */; };
 		CA4C33782237BF17006CB055 /* TestingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4C33772237BF17006CB055 /* TestingViewController.swift */; };
 		CA6EC70A222FDB8A0007917E /* TabBarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6EC709222FDB8A0007917E /* TabBarViewCell.swift */; };
@@ -21,6 +21,7 @@
 		CAA39D4F222D568B000740E4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAA39D4D222D568B000740E4 /* LaunchScreen.storyboard */; };
 		CAA39D5A222D568B000740E4 /* TabPagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA39D59222D568B000740E4 /* TabPagerTests.swift */; };
 		CAA39D65222D568B000740E4 /* TabPagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA39D64222D568B000740E4 /* TabPagerUITests.swift */; };
+		CAE4F578223D126B00973BC3 /* TabBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE4F577223D126B00973BC3 /* TabBarStyle.swift */; };
 		CAF349F322390706000A9EC4 /* PageableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF349F222390706000A9EC4 /* PageableController.swift */; };
 		CAF349F522393E76000A9EC4 /* TestingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF349F422393E76000A9EC4 /* TestingTableViewController.swift */; };
 		CAF37F282235314500670B17 /* PreferredContentSizeChangeHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF37F272235314500670B17 /* PreferredContentSizeChangeHandling.swift */; };
@@ -47,7 +48,7 @@
 /* Begin PBXFileReference section */
 		CA0AF886222EB49A0032AE25 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		CA0E9025223250030048EC53 /* UIView+Anchors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Anchors.swift"; sourceTree = "<group>"; };
-		CA0E9028223262C70048EC53 /* AutoSizingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingCollectionView.swift; sourceTree = "<group>"; };
+		CA48B172223A351200BDE0C4 /* TestingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingTableViewCell.swift; sourceTree = "<group>"; };
 		CA4C33742236EB79006CB055 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		CA4C33772237BF17006CB055 /* TestingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingViewController.swift; sourceTree = "<group>"; };
 		CA6EC709222FDB8A0007917E /* TabBarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewCell.swift; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 		CAA39D60222D568B000740E4 /* TabPagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TabPagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA39D64222D568B000740E4 /* TabPagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPagerUITests.swift; sourceTree = "<group>"; };
 		CAA39D66222D568B000740E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CAE4F577223D126B00973BC3 /* TabBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarStyle.swift; sourceTree = "<group>"; };
 		CAF349F222390706000A9EC4 /* PageableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableController.swift; sourceTree = "<group>"; };
 		CAF349F422393E76000A9EC4 /* TestingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingTableViewController.swift; sourceTree = "<group>"; };
 		CAF37F272235314500670B17 /* PreferredContentSizeChangeHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferredContentSizeChangeHandling.swift; sourceTree = "<group>"; };
@@ -99,10 +101,10 @@
 		CA0AF881222E86080032AE25 /* TabPagerCore */ = {
 			isa = PBXGroup;
 			children = (
+				CAE4F576223D120300973BC3 /* Styling */,
 				CA4C33762237BA91006CB055 /* Protocols */,
 				CAF37F292235529200670B17 /* FlowLayout */,
 				CAF37F262235312000670B17 /* AccessibilityUtils */,
-				CA0E9027223262AD0048EC53 /* AutoSizingScrollViews */,
 				CA0E902422324FD90048EC53 /* Extensions */,
 				CA6EC70B2230F0E80007917E /* TabPagerViewController.swift */,
 				CA0AF886222EB49A0032AE25 /* TabBar.swift */,
@@ -117,6 +119,7 @@
 				CA4C33742236EB79006CB055 /* ExampleViewController.swift */,
 				CA4C33772237BF17006CB055 /* TestingViewController.swift */,
 				CAF349F422393E76000A9EC4 /* TestingTableViewController.swift */,
+				CA48B172223A351200BDE0C4 /* TestingTableViewCell.swift */,
 			);
 			path = TabPagerExample;
 			sourceTree = "<group>";
@@ -127,14 +130,6 @@
 				CA0E9025223250030048EC53 /* UIView+Anchors.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		CA0E9027223262AD0048EC53 /* AutoSizingScrollViews */ = {
-			isa = PBXGroup;
-			children = (
-				CA0E9028223262C70048EC53 /* AutoSizingCollectionView.swift */,
-			);
-			path = AutoSizingScrollViews;
 			sourceTree = "<group>";
 		};
 		CA4C33762237BA91006CB055 /* Protocols */ = {
@@ -196,6 +191,14 @@
 				CAA39D66222D568B000740E4 /* Info.plist */,
 			);
 			path = TabPagerUITests;
+			sourceTree = "<group>";
+		};
+		CAE4F576223D120300973BC3 /* Styling */ = {
+			isa = PBXGroup;
+			children = (
+				CAE4F577223D126B00973BC3 /* TabBarStyle.swift */,
+			);
+			path = Styling;
 			sourceTree = "<group>";
 		};
 		CAF37F262235312000670B17 /* AccessibilityUtils */ = {
@@ -351,11 +354,12 @@
 				CAA39D47222D568A000740E4 /* ViewController.swift in Sources */,
 				CA6EC70C2230F0E80007917E /* TabPagerViewController.swift in Sources */,
 				CA0AF887222EB49A0032AE25 /* TabBar.swift in Sources */,
-				CA0E9029223262C70048EC53 /* AutoSizingCollectionView.swift in Sources */,
 				CAA39D45222D568A000740E4 /* AppDelegate.swift in Sources */,
 				CA4C33782237BF17006CB055 /* TestingViewController.swift in Sources */,
 				CAF349F322390706000A9EC4 /* PageableController.swift in Sources */,
+				CA48B173223A351200BDE0C4 /* TestingTableViewCell.swift in Sources */,
 				CA0E9026223250030048EC53 /* UIView+Anchors.swift in Sources */,
+				CAE4F578223D126B00973BC3 /* TabBarStyle.swift in Sources */,
 				CAF37F2B223552D600670B17 /* TabPagerFlowLayout.swift in Sources */,
 				CA4C33752236EB79006CB055 /* ExampleViewController.swift in Sources */,
 			);
@@ -536,6 +540,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GN5CNTGGKX;
 				INFOPLIST_FILE = TabPager/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -556,6 +561,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GN5CNTGGKX;
 				INFOPLIST_FILE = TabPager/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

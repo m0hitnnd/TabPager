@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let nv = UINavigationController.init(rootViewController: TestingViewController.init())
+        let nv = UINavigationController.init(rootViewController: TestingTableViewController.init())
         window?.rootViewController = nv
         
         return true

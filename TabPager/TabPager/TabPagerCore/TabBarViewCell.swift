@@ -21,7 +21,6 @@ public class TabBarViewCell: UICollectionViewCell {
     }()
     
     private static let sizingCell = TabBarViewCell.init(frame: .zero)
-
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -48,18 +47,29 @@ public class TabBarViewCell: UICollectionViewCell {
             ])
     }
     
-    func configure(withTitle title: String) {
+    func configure(withTitle title: String, andItemStyle style: TabBarStyle.TabBarItemStyle) {
         label.text = title
         accessibilityLabel = title
+        
+        applyStyle(style: style)
+    }
+    
+    private func applyStyle(style: TabBarStyle.TabBarItemStyle) {
+        label.font = style.barItemTitleFont
+        label.textColor = style.barItemTitleColor
+        contentView.backgroundColor = style.barItemBackgroundColor
     }
     
 }
 
 //MARK: Helpers
 extension TabBarViewCell {
-    public static func height(withTitle title: String, forWidth width: CGFloat) -> CGFloat {
+    public static func height(withTitle title: String,
+                              andStyle style: TabBarStyle.TabBarItemStyle,
+                              forWidth width: CGFloat) -> CGFloat {
+        
         sizingCell.prepareForReuse()
-        sizingCell.configure(withTitle: title)
+        sizingCell.configure(withTitle: title, andItemStyle: style)
         sizingCell.layoutIfNeeded()
         var fittingSize = UIView.layoutFittingCompressedSize
         fittingSize.width = width

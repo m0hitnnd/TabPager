@@ -21,9 +21,10 @@ class ExampleViewController: UIViewController, PageableController {
         label.font = UIFont.preferredFont(forTextStyle: .title1)
         return label
     }()
-
+    
     init() {
         super.init(nibName: nil, bundle: nil)
+        setupUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,7 +38,7 @@ class ExampleViewController: UIViewController, PageableController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("child - viewDidLoad")
-        setupUI()
+//        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +63,7 @@ class ExampleViewController: UIViewController, PageableController {
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             label.topAnchor.constraint(equalTo: view.topAnchor),
+            label.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
     }
     
