@@ -8,75 +8,108 @@
 
 import UIKit
 
-protocol BarInfoDelegate: class {
-    func title(forRow row: Int) -> String
-}
-
-protocol PagerDelegeate: class {
+protocol PagerDelegate: class {
     func viewController(forIndex index: Int) -> PageableController?
 }
 
-typealias TabPagerDelegate = BarInfoDelegate & PagerDelegeate
-
 class TabPagerViewController: UIViewController {
     
-    private var tabBar: TabBar! {
-        didSet {
-            tabBar.translatesAutoresizingMaskIntoConstraints = false
-            tabBar.dataSource = self
-            tabBar.delegate = self
-            tabBar.register(TabBarViewCell.self, forCellWithReuseIdentifier:"TabBarViewCell")
-            tabBar.showsHorizontalScrollIndicator = false
-            tabBar.backgroundColor = UIColor.orange
-        }
+    enum ContentFlow {
+        case freeFlow
+        case contentBased
     }
     
-    private var containerView: UIView = {
+    private var style: TabBarStyle = TabBarStyle()
+    
+    private let tabBar: TabBar = {
+        let flowLayout = TabPagerFlowLayout()
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.estimatedItemSize = CGSize.init(width: 75, height: 50)
+        let tabBar = TabBar(frame: .zero, collectionViewLayout: flowLayout)
+        tabBar.translatesAutoresizingMaskIntoConstraints = false
+        tabBar.register(TabBarViewCell.self, forCellWithReuseIdentifier:"TabBarViewCell")
+        tabBar.showsHorizontalScrollIndicator = false
+        tabBar.backgroundColor = UIColor.orange
+        return tabBar
+    }()
+    
+    private let containerView: UIView = {
         let view = UIView.init()
         view.backgroundColor = UIColor.white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private var pageViewController: UIPageViewController = {
-        let pageViewController = UIPageViewController.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+    private let pageViewController: UIPageViewController = {
+        let pageViewController = UIPageViewController.init(transitionStyle: .scroll,
+                                                           navigationOrientation: .horizontal,
+                                                           options: nil)
         return pageViewController
     }()
     
-    private var tabBarHeightConstraint: NSLayoutConstraint!
     
-    private var titles: [String] = []
+    private lazy var tabBarHeightConstraint: NSLayoutConstraint = {
+        return NSLayoutConstraint()
+    }()
+    private lazy var containerViewHeightConstraint: NSLayoutConstraint = {
+        return NSLayoutConstraint()
+    }()
     
-    weak var delegate: TabPagerDelegate?
+    private lazy var titles: [String] = []
     
+    private var contentFlow: ContentFlow = .freeFlow
     
-    init(delegate: TabPagerDelegate?) {
+    weak var delegate: PagerDelegate?
+    
+    init(delegate: PagerDelegate, style: TabBarStyle = TabBarStyle.init(), flow: ContentFlow = .freeFlow) {
         super.init(nibName: nil, bundle: nil)
-        
         self.delegate = delegate
+        self.style = style
+        self.contentFlow = flow
+
+        setupUI()
+    }
+    
+    init(style: TabBarStyle = TabBarStyle.init(), flow: ContentFlow = .freeFlow) {
+        super.init(nibName: nil, bundle: nil)
+        self.delegate = nil
+        self.style = style
+        self.contentFlow = flow
+        
+        setupUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
-        addTabBar()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func setupUI() {
+        addTabBar()
+        addPageViewContainer()
+        addPageViewControllerToContainer()
+        
+        applyStyle()
+    }
+    
+    private func applyStyle() {
+        tabBar.applyStyle(style: style)
     }
     
     private func addTabBar() {
-        setAndLayoutTabBar()
-        
+        tabBar.dataSource = self
+        tabBar.delegate = self
+
         view.addSubview(tabBar)
         
         let sizingCellWidth = self.view.frame.size.width
+        // Providing any dummy content to calculate height of the collection view
         let collectionViewHeight = TabBarViewCell.height(withTitle: "Height Calculator",
+                                                         andStyle: style.barItemStyle,
                                                          forWidth: sizingCellWidth)
         tabBarHeightConstraint = tabBar.heightAnchor.constraint(equalToConstant: collectionViewHeight)
         
@@ -86,28 +119,25 @@ class TabPagerViewController: UIViewController {
             tabBar.topAnchor.constraint(equalTo: view.safeTopAnchor),
             tabBarHeightConstraint
             ])
-        
-        addPageViewContainer()
-    }
-    
-    private func setAndLayoutTabBar() {
-        let flowLayout = TabPagerFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.estimatedItemSize = CGSize.init(width: 75, height: 50)
-        tabBar = TabBar(frame: .zero, collectionViewLayout: flowLayout)
     }
     
     private func addPageViewContainer() {
         view.addSubview(containerView)
         
+        // default container view height
+        containerViewHeightConstraint = containerView.heightAnchor.constraint(equalToConstant: 100)
+        
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             containerView.topAnchor.constraint(equalTo: tabBar.bottomAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            containerViewHeightConstraint
             ])
         
-        addPageViewControllerToContainer()
+        if contentFlow == .freeFlow {
+            containerViewHeightConstraint.isActive = false
+        }
     }
     
     private func addPageViewControllerToContainer() {
@@ -131,15 +161,40 @@ class TabPagerViewController: UIViewController {
     func configure(withTitles titles: [String], andInitialViewController viewController: PageableController) {
         self.titles = titles
         setViewController(controller: viewController)
+        updatePageViewContainerHeight(height: viewController.fittingHeight())
     }
     
-    private func setViewController(controller: PageableController?, direction: UIPageViewController.NavigationDirection = .forward) {
+    private func setViewController(controller: PageableController?,
+                                   direction: UIPageViewController.NavigationDirection = .forward,
+                                   completion: ((Bool) -> Void)? = nil) {
+        
         guard let initialVC = (controller as? UIViewController) else {
             return
         }
-        pageViewController.setViewControllers([initialVC], direction: direction, animated: true, completion: nil)
+        pageViewController.setViewControllers([initialVC], direction: direction, animated: true, completion: completion)
     }
     
+}
+
+// MARK: Size Helpers
+private extension TabPagerViewController {
+    
+    //If the child view controller updates its preferredContentSize, in response to subviews being added/removed, then the parent view controller (the container) will receive call to its -preferredContentSizeDidChangeForChildContentContainer: method. Using this opportunity to adjust the height of the Container View.
+    func notifyParentAboutTheSizeChange() {
+        let width = self.view.bounds.width
+        preferredContentSize = CGSize.init(width: width, height: tabBarHeightConstraint.constant + containerViewHeightConstraint.constant)
+    }
+    
+    func updatePageViewContainerHeightAndNotifyParent(height: CGFloat) {
+        guard contentFlow == .contentBased else { return }
+        updatePageViewContainerHeight(height: height)
+        notifyParentAboutTheSizeChange()
+    }
+    
+    func updatePageViewContainerHeight(height: CGFloat) {
+        guard contentFlow == .contentBased else { return }
+        containerViewHeightConstraint.constant = height
+    }
 }
 
 extension TabPagerViewController: UICollectionViewDataSource {
@@ -149,33 +204,40 @@ extension TabPagerViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let tabBarViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabBarViewCell", for: indexPath) as? TabBarViewCell else {
-            fatalError("It should be tab bar view cell")
+            assertionFailure("TabBarViewCell required at \(#file) - line num - \(#line)")
+            return UICollectionViewCell()
         }
         let title = titles[indexPath.row]
-        tabBarViewCell.configure(withTitle: title)
+        tabBarViewCell.configure(withTitle: title, andItemStyle: style.barItemStyle)
         return tabBarViewCell
     }
     
 }
 
 extension TabPagerViewController: UICollectionViewDelegateFlowLayout {
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard let viewControllerAtSelectedIndex = delegate?.viewController(forIndex: indexPath.row),
+            let previouslySelectedViewController = pageViewController.viewControllers?.first,
+            let previouslySelectedPageableController = previouslySelectedViewController as? PageableController,
+            previouslySelectedPageableController.pageIndex != indexPath.row else {
+                return
+        }
+        
         tabBar.moveTo(index: indexPath.row, animated: true)
-        let viewControllerAtSelectedIndex = delegate?.viewController(forIndex: indexPath.row)
         
         var direction: UIPageViewController.NavigationDirection = .forward
-        if let previouslySelectedViewController = pageViewController.viewControllers?.first,
-            let previouslySelectedPageableController = previouslySelectedViewController as? PageableController {
-            let previouslySelectedIndex = previouslySelectedPageableController.pageIndex
-            if previouslySelectedIndex < indexPath.row {
-                direction = .forward
-            } else {
-                direction = .reverse
-            }
+        let previouslySelectedIndex = previouslySelectedPageableController.pageIndex
+        
+        if previouslySelectedIndex < indexPath.row {
+            direction = .forward
+        } else {
+            direction = .reverse
         }
-
+        
         setViewController(controller: viewControllerAtSelectedIndex, direction: direction)
+        updatePageViewContainerHeightAndNotifyParent(height: viewControllerAtSelectedIndex.fittingHeight())
     }
 }
 
@@ -183,9 +245,10 @@ extension TabPagerViewController: UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
+//        guard completed else { return }
         if let selectedViewController = pageViewController.viewControllers?.first as? PageableController {
-            let index = selectedViewController.pageIndex
-            tabBar.moveTo(index: index, animated: true)
+            updatePageViewContainerHeightAndNotifyParent(height: selectedViewController.fittingHeight())
+            tabBar.moveTo(index: selectedViewController.pageIndex, animated: true)
         }
     }
 }

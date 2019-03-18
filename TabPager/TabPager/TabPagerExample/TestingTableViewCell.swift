@@ -1,38 +1,82 @@
 //
-//  TestingViewController.swift
+//  TestingTableViewCell.swift
 //  TabPager
 //
-//  Created by Mohit Anand on 12/03/19.
+//  Created by Mohit Anand on 14/03/19.
 //  Copyright © 2019 Bugsy. All rights reserved.
 //
 
 import UIKit
 
-final class TestingViewController: TabPagerViewController {
+class TestingTableViewCell: UITableViewCell {
     
-    init() {
-        super.init(flow: .freeFlow)
-        delegate = self
+    private let containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var contentViewController: TabPagerViewController!
+    
+    private var containerHeightConstraint: NSLayoutConstraint!
+    
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addContainerView()
+        contentViewController = TabPagerViewController.init(delegate: self, flow: .contentBased)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private func addContainerView() {
+        contentView.addSubview(containerView)
         
+        NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            ])
+    }
+    
+    func addViewControllerToParentViewController(parentViewController: UIViewController) {
+        parentViewController.addChild(contentViewController)
+        contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(contentViewController.view)
+        NSLayoutConstraint.activate([
+            contentViewController.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            contentViewController.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            contentViewController.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            contentViewController.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            ])
+        contentViewController.didMove(toParent: parentViewController)
+    }
+    
+    func removeViewControllerFromParentViewController() {
+        contentViewController.view.removeFromSuperview()
+        contentViewController.willMove(toParent: nil)
+        contentViewController.removeFromParent()
+    }
+    
+    // Titles and other data should be provided
+    func configure() {
         let v1 = ExampleViewController.init()
         v1.view.backgroundColor = UIColor.yellow
         v1.configure(withText: "aklsmdsa ddas dasodaskd asdklasd aslkdmasldkmasld asdlaksd")
         v1.pageIndex = 0
+        
         let titles: [String] = ["Equity", "Balanced", "Tax Saver", "Debt", "Multi Cap", "Liquid", "Medium to Long Duration"]
-
-        configure(withTitles: titles, andInitialViewController: v1)
+        
+        
+        contentViewController.configure(withTitles: titles, andInitialViewController: v1)
     }
 }
 
-extension TestingViewController: PagerDelegate {
+extension TestingTableViewCell: PagerDelegate {
     
     func viewController(forIndex index: Int) -> PageableController? {
         switch index {
@@ -59,18 +103,21 @@ extension TestingViewController: PagerDelegate {
             v4.view.backgroundColor = UIColor.magenta
             v4.configure(withText: "aklsmdsa ddas dasodaskd asdklasd aslkdmasldkmasld asdlaksd asldkasmdlmsad asdkasd aldmasd asldmasdas dasldmsa dasldmas dklasmnd sadnoasdasodkasldkasldklaskdlasd asdasodkaslkds dkasjdasn")
             v4.pageIndex = 3
+
             return v4
         case 4:
             let v5 = ExampleViewController.init()
             v5.view.backgroundColor = UIColor.cyan
             v5.configure(withText: "aklsmdsa ddas dasodaskd asdklasd aslkdmasldkmasld asdlaksd asldkasmdlmsad asdkasd aldmasd asldmasdas dasldmsa dasldmas dklasmnd sadnoasdasodkasldkasldklaskdlasd asdasodkaslkds dkasjdasn dasojdaslkdpod dskfhjfgnrigr ")
             v5.pageIndex = 4
+
             return v5
         case 5:
             let v6 = ExampleViewController.init()
             v6.view.backgroundColor = UIColor.darkGray
             v6.configure(withText: "aklsmdsa ddas dasodaskd asdklasd aslkdmasldkmasld asdlaksd asldkasmdlmsad asdkasd aldmasd asldmasdas dasldmsa dasldmas dklasmnd sadnoasdasodkasldkasldklaskdlasd asdasodkaslkds dkasjdasn dasojdaslkdpod dskfhjfgnrigr grekifjefnbruggrbg fvjsehfjsenf furhgrebfuhrjfsnf eufhesfjesf")
             v6.pageIndex = 5
+
             return v6
         case 6:
             let v7 = ExampleViewController.init()

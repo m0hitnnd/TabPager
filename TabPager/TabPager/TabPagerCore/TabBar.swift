@@ -10,18 +10,19 @@ import UIKit
 
 class TabBar: UICollectionView {
     
-    // MARK: Private
-    private let selectedBarLineHeight: CGFloat = 4
-    
-    
-    // MARK: Public
-    open lazy var selectedBar: UIView = { [unowned self] in
-        let bar  = UIView(frame: CGRect(x: 0, y: self.frame.size.height - self.selectedBarLineHeight, width: 0, height: CGFloat(self.selectedBarLineHeight)))
+    private lazy var selectedBar: UIView = { [unowned self] in
+        let bar  = UIView(frame: CGRect(x: 0, y: self.frame.size.height - self.selectedBarHeight, width: 0, height: CGFloat(self.selectedBarHeight)))
         bar.backgroundColor = UIColor.white
         return bar
         }()
     
-    var selectedIndex = 0
+    private var selectedBarHeight: CGFloat = 4 {
+        didSet {
+            updateSelectedBarYPosition()
+        }
+    }
+    
+    var selectedIndex = 0 
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -35,6 +36,13 @@ class TabBar: UICollectionView {
     
     private func addSelectedBar() {
         addSubview(selectedBar)
+    }
+    
+    func applyStyle(style: TabBarStyle) {
+        backgroundColor = style.barBackgroundColor
+        selectedBarHeight = style.selectedBarLineHeight
+        selectedBar.backgroundColor = style.selectedBarColor
+        
     }
     
     func moveTo(index: Int, animated: Bool) {
@@ -67,9 +75,9 @@ class TabBar: UICollectionView {
     private func updateSelectedBarYPosition() {
         var selectedBarFrame = selectedBar.frame
 
-        selectedBarFrame.origin.y = frame.size.height - selectedBarLineHeight
+        selectedBarFrame.origin.y = frame.size.height - selectedBarHeight
         
-        selectedBarFrame.size.height = selectedBarLineHeight
+        selectedBarFrame.size.height = selectedBarHeight
         selectedBar.frame = selectedBarFrame
     }
     
